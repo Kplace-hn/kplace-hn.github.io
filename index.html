@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="es"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>KPlace</title>
+<meta property="og:title" content="KPlace">
+<meta property="og:site_name" content="KPlace">
+<meta property="og:description" content="Foto del producto">
+<meta name="theme-color" content="#000000">
+<style>
+html,body{height:100%;margin:0;background:#000;color:#e9e4ff;font-family:system-ui,-apple-system,Roboto,sans-serif}
+#v{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom)}
+#v img{max-width:100%;max-height:100%;object-fit:contain;animation:in .5s ease both}
+.sp{width:28px;height:28px;border-radius:50%;border:3px solid rgba(255,255,255,.18);border-top-color:#a78bfa;animation:r .8s linear infinite}
+.b{font-weight:700;letter-spacing:.06em;font-size:20px;color:#a78bfa}
+@keyframes r{to{transform:rotate(360deg)}}@keyframes in{from{opacity:0}to{opacity:1}}
+</style></head>
+<body>
+<div id="v"><div class="b">KPlace</div><div class="sp"></div></div>
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore-compat.js"></script>
+<script>
+(function(){
+var v=document.getElementById('v');
+function msg(t){v.innerHTML='<div class="b">KPlace</div><div>'+t+'</div>';}
+var id=new URLSearchParams(location.search).get('f');
+if(!id){msg('Falta el enlace de la foto.');return;}
+firebase.initializeApp({apiKey:"AIzaSyAkXsYEeP1AdR05JjiyFKTRWCYNGIBf0ZU",authDomain:"eunoia-ordenes.firebaseapp.com",projectId:"eunoia-ordenes",messagingSenderId:"448372653210",appId:"1:448372653210:web:d23d13719d61b53184b323"});
+firebase.firestore().collection('fotos_publicas').doc(String(id)).get().then(function(s){
+  if(!s.exists||!s.data().foto){msg('La foto ya no está disponible.');return;}
+  var im=new Image();im.onload=function(){v.innerHTML='';v.appendChild(im)};
+  im.onerror=function(){msg('No se pudo cargar la foto.')};
+  im.src=s.data().foto;
+}).catch(function(){msg('No se pudo cargar la foto.')});
+})();
+</script>
+</body></html>
